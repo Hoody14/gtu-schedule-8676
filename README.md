@@ -6,12 +6,13 @@ University group, so you never have to scroll through the university's
 
 The university publishes the whole timetable as a single HTML file on
 `leqtori.gtu.ge:9000`, with one table per academic group. A script pulls out
-just your group's table, and the site renders it as a readable schedule:
+just your group's table, and the site renders it as a plain Monday–Saturday
+list:
 
-- **Now / next** card with a live countdown in Tbilisi time
-- **Day cards** for Monday–Saturday, with today highlighted
-- **Grid view** that mirrors the original table layout, including two-hour
-  classes that span two time slots
+- One section per day, in order, with today highlighted and the class that is
+  running right now marked in Tbilisi time
+- Every class **cross-checked against the lecturers' timetable** before it is
+  shown (see below)
 - **Calendar export** (`.ics`) for the current week
 - Georgian/English labels and light/dark themes
 - A **refresh button** that can re-run the scraper on demand
@@ -37,6 +38,34 @@ Two details the scraper handles on its own, because both change every week:
 - **Which table is yours.** Group 8676 lived in `table_2037_DETAILED` in week 1
   and `table_2038_DETAILED` in week 2. The script looks the group code up in
   the page's group index and follows that anchor instead of hardcoding an id.
+
+## Cross-checking every class
+
+The university publishes the same timetable twice: once per group
+(`groups ….html`) and once per lecturer (`teachers ….html`). The two files are
+written from the same data but laid out differently, so one is a usable check
+on the other — and the group tables do occasionally disagree with reality.
+
+After parsing your group's table, the scraper downloads the matching
+`teachers` file and walks every lecturer's table. Each lecturer cell lists the
+groups attending it, so a class is **confirmed** only when all of this lines
+up:
+
+- the lecturer's cell is on the same weekday and in the same time slot,
+- it carries the same course code (`ICT23808G2-P`), and
+- your group code appears in that cell's group list as a whole token — `8676`
+  in `8684, 8695, 8696, 8676, 8641` counts, but `8676` inside `86761` does not.
+
+The check runs both ways. A class in your group's table that no lecturer backs
+up is kept but flagged `"confirmed": false`, and the site shows an amber
+*unconfirmed* badge next to it. A class the lecturers' file says you attend but
+your group's table omits produces a warning instead of being silently dropped.
+Confirmed classes also record `sharedWith`, the other groups sitting in the
+same room, which is handy for spotting a mis-filed slot.
+
+The footer of the site shows the tally (`13/13 verified`), and the GitHub
+Actions job summary prints it per run, so a sudden drop is visible without
+reading the JSON.
 
 ## Running it locally
 
@@ -113,14 +142,20 @@ on GitHub instead.
 {
   "group": "8676",
   "program": "მაგისტრატურა - პროგრამა ინფორმატიკა",
-  "scrapedAt": "2026-10-02T10:03:06Z",
+  "scrapedAt": "2026-10-02T11:39:18Z",
   "source": {
-    "fileName": "groups 2026_2027_I_2_.html",
-    "lastModified": "2026-09-25T10:30:44.928Z",
-    "tableId": "table_2038_DETAILED",
+    "fileName": "groups 2026_2027_I_3.html",
+    "lastModified": "2026-10-02T10:06:13.906Z",
+    "tableId": "table_2061_DETAILED",
     "academicYear": "2026-2027",
     "semester": "I",
-    "week": 2
+    "week": 3
+  },
+  "crossCheck": {
+    "file": "teachers 2026_2027_I_3.html",
+    "slotsFound": 13,    // slots the lecturers' file says this group attends
+    "confirmed": 13,     // of those, how many the group table agrees with
+    "total": 13
   },
   "days": [{ "index": 0, "ka": "ორშაბათი", "en": "Monday" }],
   "slots": [{ "index": 10, "label": "10-18:00", "start": "18:00", "end": "19:00" }],
@@ -138,6 +173,8 @@ on GitHub instead.
       "lecturer": "კვარაცხელია ვახტანგ",
       "room": "06-505ბ",
       "roomNote": "პ",
+      "confirmed": true,     // backed by the lecturers' timetable
+      "sharedWith": ["8694", "8696", "8641"],
       "raw": ["…"]           // the original cell lines, in case parsing missed something
     }
   ],
@@ -156,5 +193,9 @@ bottom of the page, and every cell keeps its original text in `raw`.
   renamed or dropped the group code. Update `GTU_GROUP`.
 - `error: no time slots parsed` means the page layout changed and
   `scripts/scrape.py` needs adjusting.
+- Classes marked *unconfirmed* on the site, or `verified` dropping below the
+  total, mean the group and lecturer timetables disagree. That is usually the
+  university mid-way through editing a week, not a bug here — compare the two
+  files before changing the parser.
 - The site shows a warning banner when the university's file is more than a
   week old, which usually means the university, not this scraper, is late.

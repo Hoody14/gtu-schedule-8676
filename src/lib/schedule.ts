@@ -15,6 +15,10 @@ export interface Lesson {
   room: string
   roomNote: string
   raw: string[]
+  /** Whether the lecturer's own timetable also lists this group for this slot. */
+  confirmed: boolean | null
+  /** Other groups attending the same class. */
+  sharedWith: string[]
 }
 
 export interface DayMeta {
@@ -44,6 +48,13 @@ export interface ScheduleSource {
   week: number | null
 }
 
+export interface CrossCheck {
+  file: string
+  slotsFound: number
+  confirmed: number
+  total: number
+}
+
 export interface Schedule {
   group: string
   program: string
@@ -51,6 +62,7 @@ export interface Schedule {
   universityEn: string
   scrapedAt: string
   source: ScheduleSource
+  crossCheck: CrossCheck
   days: DayMeta[]
   slots: SlotMeta[]
   lessons: Lesson[]
@@ -105,48 +117,6 @@ export function tbilisiNow(reference: Date = new Date()): TbilisiNow {
   }
 }
 
-export interface LessonStatus {
-  current: Lesson | null
-  next: Lesson | null
-  /** Minutes until `next` starts, or until `current` ends. */
-  minutesUntilNext: number
-  minutesUntilCurrentEnds: number
-}
-
-export function lessonStatus(lessons: Lesson[], now: TbilisiNow): LessonStatus {
-  const nowAbsolute = now.day * 24 * 60 + now.minutes
-  const week = 7 * 24 * 60
-
-  let current: Lesson | null = null
-  let minutesUntilCurrentEnds = 0
-  let next: Lesson | null = null
-  let bestDelta = Number.POSITIVE_INFINITY
-
-  for (const lesson of lessons) {
-    const base = lesson.day * 24 * 60
-    const start = base + toMinutes(lesson.start)
-    const finish = base + endMinutes(lesson)
-
-    if (nowAbsolute >= start && nowAbsolute < finish) {
-      current = lesson
-      minutesUntilCurrentEnds = finish - nowAbsolute
-    }
-
-    const delta = (start - nowAbsolute + week) % week
-    if (delta > 0 && delta < bestDelta) {
-      bestDelta = delta
-      next = lesson
-    }
-  }
-
-  return {
-    current,
-    next,
-    minutesUntilNext: Number.isFinite(bestDelta) ? bestDelta : 0,
-    minutesUntilCurrentEnds,
-  }
-}
-
 export function lessonsByDay(schedule: Schedule): Lesson[][] {
   return schedule.days.map((day) =>
     schedule.lessons
@@ -155,52 +125,9 @@ export function lessonsByDay(schedule: Schedule): Lesson[][] {
   )
 }
 
-export interface ScheduleStats {
-  lessonCount: number
-  subjectCount: number
-  weeklyHours: number
-  busiestDay: number | null
-}
-
-export function scheduleStats(schedule: Schedule): ScheduleStats {
-  const perDay = new Map<number, number>()
-  let weeklyMinutes = 0
-
-  for (const lesson of schedule.lessons) {
-    const duration = endMinutes(lesson) - toMinutes(lesson.start)
-    weeklyMinutes += duration
-    perDay.set(lesson.day, (perDay.get(lesson.day) ?? 0) + duration)
-  }
-
-  let busiestDay: number | null = null
-  let busiestMinutes = 0
-  for (const [day, minutes] of perDay) {
-    if (minutes > busiestMinutes) {
-      busiestMinutes = minutes
-      busiestDay = day
-    }
-  }
-
-  return {
-    lessonCount: schedule.lessons.length,
-    subjectCount: new Set(schedule.lessons.map((lesson) => lesson.subject)).size,
-    weeklyHours: Math.round((weeklyMinutes / 60) * 10) / 10,
-    busiestDay,
-  }
-}
-
-/** Stable per-subject hue so the same course keeps its colour everywhere. */
-export function subjectHue(lesson: Lesson): number {
-  const seed = lesson.courseCode || lesson.subject
-  let hash = 0
-  for (let index = 0; index < seed.length; index += 1) {
-    hash = (hash * 31 + seed.charCodeAt(index)) % 360
-  }
-  return hash
-}
-
-export function lessonAccent(lesson: Lesson): string {
-  return `oklch(0.62 0.17 ${subjectHue(lesson)})`
+export function isHappeningNow(lesson: Lesson, now: TbilisiNow): boolean {
+  if (lesson.day !== now.day) return false
+  return now.minutes >= toMinutes(lesson.start) && now.minutes < endMinutes(lesson)
 }
 
 /** Days since the university last republished the timetable file. */

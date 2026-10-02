@@ -23,6 +23,10 @@ const dictionary = {
   openSource: { ka: 'ორიგინალი ცხრილი', en: 'Original timetable' },
   updated: { ka: 'ცხრილი განახლდა', en: 'Schedule updated' },
   upToDate: { ka: 'ცხრილი უკვე განახლებულია', en: 'Already up to date' },
+  reloadedOnly: {
+    ka: 'წაკითხულია ბოლო გამოქვეყნებული ვერსია. უნივერსიტეტის გვერდის ხელახლა წასაკითხად საჭიროა GitHub Actions-ის გაშვება.',
+    en: 'Read the latest published data. Reading the university page again needs a GitHub Actions run.',
+  },
   refreshFailed: { ka: 'განახლება ვერ მოხერხდა', en: 'Refresh failed' },
   publishedOn: { ka: 'უნივერსიტეტმა გამოაქვეყნა', en: 'Published by the university' },
   checkedOn: { ka: 'ბოლოს შემოწმდა', en: 'Last checked' },

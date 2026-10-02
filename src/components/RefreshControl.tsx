@@ -51,7 +51,7 @@ export function RefreshControl({ language, onReload }: RefreshControlProps) {
       } else {
         const url = workflowUrl(settings)
         toast.info(translate('upToDate', language), {
-          description: translate('githubIntro', language),
+          description: translate('reloadedOnly', language),
           action: url
             ? { label: translate('runOnGithub', language), onClick: () => window.open(url, '_blank') }
             : { label: translate('settings', language), onClick: () => setSettingsOpen(true) },

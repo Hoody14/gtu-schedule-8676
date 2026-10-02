@@ -67,6 +67,40 @@ The footer of the site shows the tally (`13/13 verified`), and the GitHub
 Actions job summary prints it per run, so a sudden drop is visible without
 reading the JSON.
 
+## Your course list
+
+The cross-check proves what the university *says* the group attends. That is
+still broader than what you are actually enrolled in — a group code can pick
+up a shared language or elective class you never signed up for.
+
+`scripts/courses.json` pins it down. It lists the real enrolment as
+`(course code, lecturer)` pairs:
+
+```jsonc
+{
+  "group": "8676",
+  "courses": [
+    { "code": "ICT23808G2-P", "lecturer": "ირემაძე ია" },
+    { "code": "MAS25008G1-LP", "lecturer": "კვარაცხელია ვახტანგ" }
+  ]
+}
+```
+
+A class goes into the main Monday–Saturday list only when its code **and**
+lecturer are on this list. Lecturer spelling wobbles between the university's
+own files (`თავდიშვილი ოთარ` in one, `ოთარი` in the other), so the match falls
+back to the surname. The same code can appear twice under different lecturers,
+which is how a lecture and its practical end up with separate staff.
+
+Nothing is deleted. A class the university files under your group that is not
+on the list still appears, in a dashed **Not on your course list** section at
+the bottom of the page, so a genuine late addition to the timetable is
+impossible to miss. The reverse is a warning: a course on your list with no
+class at all this week gets flagged.
+
+Delete `scripts/courses.json` to go back to showing everything the university
+publishes for the group.
+
 ## Running it locally
 
 ```bash
@@ -115,6 +149,16 @@ variable named `GTU_GROUP` (**Settings → Secrets and variables → Actions →
 Variables**) to the group code exactly as it appears on the university site,
 for example `8676` or `8594-1`.
 
+`scripts/courses.json` is tied to one group by its `group` field and is
+ignored for any other, so pointing the scraper at a different group falls back
+to showing everything.
+
+### Changing your courses
+
+Edit `scripts/courses.json` and push. The workflow re-runs on every push, so
+the site picks the change up on the next deploy. Adding a class that was set
+aside is one entry; dropping a course is one deletion.
+
 ## The refresh button
 
 Clicking **განახლება / Refresh** always re-reads the published
@@ -157,6 +201,11 @@ on GitHub instead.
     "confirmed": 13,     // of those, how many the group table agrees with
     "total": 13
   },
+  "courseList": {
+    "configured": true,  // false when scripts/courses.json is absent
+    "enrolled": 11,      // shown in the main list
+    "extra": 2           // shown under "Not on your course list"
+  },
   "days": [{ "index": 0, "ka": "ორშაბათი", "en": "Monday" }],
   "slots": [{ "index": 10, "label": "10-18:00", "start": "18:00", "end": "19:00" }],
   "lessons": [
@@ -174,6 +223,7 @@ on GitHub instead.
       "room": "06-505ბ",
       "roomNote": "პ",
       "confirmed": true,     // backed by the lecturers' timetable
+      "enrolled": true,      // on scripts/courses.json
       "sharedWith": ["8694", "8696", "8641"],
       "raw": ["…"]           // the original cell lines, in case parsing missed something
     }

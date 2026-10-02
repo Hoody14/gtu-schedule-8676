@@ -84,6 +84,7 @@ jobs:
             echo "- Source file: \`${{ steps.scrape.outputs.source_file }}\`"
             echo "- Lessons parsed: ${{ steps.scrape.outputs.lessons }}"
             echo "- Confirmed by the lecturers' timetable: ${{ steps.scrape.outputs.verified }}"
+            echo "- On your course list: ${{ steps.scrape.outputs.enrolled }} (${{ steps.scrape.outputs.set_aside }} set aside)"
             echo "- Warnings: ${{ steps.scrape.outputs.warnings }}"
             echo "- Data changed: ${{ steps.scrape.outputs.changed }}"
             echo "- Site: ${{ steps.deploy.outputs.page_url }}"

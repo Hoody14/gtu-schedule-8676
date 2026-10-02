@@ -13,6 +13,18 @@ const dictionary = {
     en: "The lecturer's timetable does not list this group for this slot.",
   },
   verified: { ka: 'დადასტურებულია ლექტორების ცხრილით', en: "confirmed against the lecturers' timetable" },
+  setAsideTitle: {
+    ka: 'თქვენს საგნების სიაში არ არის',
+    en: 'Not on your course list',
+  },
+  setAsideIntro: {
+    ka: 'უნივერსიტეტმა ეს ჯგუფ {group}-ს მიაკუთვნა, მაგრამ ეს საგნები თქვენს სიაში არ არის. თუ რომელიმე მართლა თქვენია, დაამატეთ scripts/courses.json-ში.',
+    en: 'The university files these under group {group}, but they are not on your course list. If one of them really is yours, add it to scripts/courses.json.',
+  },
+  courseListNote: {
+    ka: 'ნაჩვენებია თქვენი {count} საგანი',
+    en: 'showing your {count} courses',
+  },
   refresh: { ka: 'განახლება', en: 'Refresh' },
   refreshing: { ka: 'ახლდება…', en: 'Refreshing…' },
   settings: { ka: 'პარამეტრები', en: 'Settings' },
@@ -54,8 +66,16 @@ const dictionary = {
 
 export type TranslationKey = keyof typeof dictionary
 
-export function translate(key: TranslationKey, language: Language): string {
-  return dictionary[key][language]
+export function translate(
+  key: TranslationKey,
+  language: Language,
+  params?: Record<string, string | number>,
+): string {
+  const text = dictionary[key][language]
+  if (!params) return text
+  return text.replace(/\{(\w+)\}/g, (match, name: string) =>
+    name in params ? String(params[name]) : match,
+  )
 }
 
 

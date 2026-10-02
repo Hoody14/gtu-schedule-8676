@@ -19,6 +19,8 @@ export interface Lesson {
   confirmed: boolean | null
   /** Other groups attending the same class. */
   sharedWith: string[]
+  /** Whether this class is on the student's own course list in courses.json. */
+  enrolled: boolean
 }
 
 export interface DayMeta {
@@ -55,6 +57,13 @@ export interface CrossCheck {
   total: number
 }
 
+export interface CourseList {
+  configured: boolean
+  courses: { code: string; lecturer: string }[]
+  enrolled: number
+  extra: number
+}
+
 export interface Schedule {
   group: string
   program: string
@@ -63,6 +72,7 @@ export interface Schedule {
   scrapedAt: string
   source: ScheduleSource
   crossCheck: CrossCheck
+  courseList: CourseList
   days: DayMeta[]
   slots: SlotMeta[]
   lessons: Lesson[]
@@ -117,12 +127,23 @@ export function tbilisiNow(reference: Date = new Date()): TbilisiNow {
   }
 }
 
-export function lessonsByDay(schedule: Schedule): Lesson[][] {
+export function lessonsByDay(schedule: Schedule, lessons: Lesson[] = schedule.lessons): Lesson[][] {
   return schedule.days.map((day) =>
-    schedule.lessons
+    lessons
       .filter((lesson) => lesson.day === day.index)
       .sort((a, b) => toMinutes(a.start) - toMinutes(b.start)),
   )
+}
+
+export function enrolledLessons(schedule: Schedule): Lesson[] {
+  return schedule.lessons.filter((lesson) => lesson.enrolled)
+}
+
+/** Classes the university lists for the group but that are not on the course list. */
+export function setAsideLessons(schedule: Schedule): Lesson[] {
+  return schedule.lessons
+    .filter((lesson) => !lesson.enrolled)
+    .sort((a, b) => a.day - b.day || toMinutes(a.start) - toMinutes(b.start))
 }
 
 export function isHappeningNow(lesson: Lesson, now: TbilisiNow): boolean {

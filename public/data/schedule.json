@@ -3,7 +3,7 @@
   "program": "მაგისტრატურა - პროგრამა ინფორმატიკა",
   "university": "საქართველოს ტექნიკური უნივერსიტეტი",
   "universityEn": "Georgian Technical University",
-  "scrapedAt": "2026-10-02T11:39:18Z",
+  "scrapedAt": "2026-10-02T11:55:11Z",
   "source": {
     "url": "http://leqtori.gtu.ge:9000/public/groups%202026_2027_I_3.html",
     "fileName": "groups 2026_2027_I_3.html",
@@ -20,6 +20,45 @@
     "slotsFound": 13,
     "confirmed": 13,
     "total": 13
+  },
+  "courseList": {
+    "configured": true,
+    "courses": [
+      {
+        "code": "ICT23808G2-P",
+        "lecturer": "ირემაძე ია"
+      },
+      {
+        "code": "ICT32508G1-LB",
+        "lecturer": "თავდიშვილი ოთარ"
+      },
+      {
+        "code": "MAS25008G1-LP",
+        "lecturer": "კვარაცხელია ვახტანგ"
+      },
+      {
+        "code": "ICT18808G1-LP",
+        "lecturer": "ახობაძე მერაბ"
+      },
+      {
+        "code": "ICT21908G2-LP",
+        "lecturer": "მაისურაძე გიორგი"
+      },
+      {
+        "code": "ICT19608G3-LP",
+        "lecturer": "ჯულაყიძე ლევან"
+      },
+      {
+        "code": "ICT19608G3-LP",
+        "lecturer": "კაიშაური თინათინ"
+      },
+      {
+        "code": "ICT21908G2-LP",
+        "lecturer": "შონია ოთარი"
+      }
+    ],
+    "enrolled": 11,
+    "extra": 2
   },
   "days": [
     {
@@ -178,7 +217,8 @@
         "8694",
         "8696",
         "8641"
-      ]
+      ],
+      "enrolled": true
     },
     {
       "subject": "პერსონალური მონაცემების დაცვის მეთოდები და საშუალებები",
@@ -204,7 +244,8 @@
       "confirmed": true,
       "sharedWith": [
         "8641"
-      ]
+      ],
+      "enrolled": true
     },
     {
       "subject": "გამოყენებითი სტატისტიკა",
@@ -232,7 +273,8 @@
         "8694",
         "8696",
         "8641"
-      ]
+      ],
+      "enrolled": true
     },
     {
       "subject": "სისტემური ანალიზი და სინერგეტიკა",
@@ -258,7 +300,8 @@
       "confirmed": true,
       "sharedWith": [
         "8696"
-      ]
+      ],
+      "enrolled": true
     },
     {
       "subject": "გამოყენებითი სტატისტიკა",
@@ -282,7 +325,8 @@
       "end": "19:00",
       "id": "4-10-MAS25008G1-LP",
       "confirmed": true,
-      "sharedWith": []
+      "sharedWith": [],
+      "enrolled": true
     },
     {
       "subject": "კომპიუტერული დიზაინის გრაფიკული ტექნოლოგიები",
@@ -306,7 +350,8 @@
       "end": "21:00",
       "id": "1-11-ICT23808G2-P",
       "confirmed": true,
-      "sharedWith": []
+      "sharedWith": [],
+      "enrolled": true
     },
     {
       "subject": "სისტემური ანალიზი და სინერგეტიკა",
@@ -330,7 +375,8 @@
       "end": "20:00",
       "id": "3-11-ICT18808G1-LP",
       "confirmed": true,
-      "sharedWith": []
+      "sharedWith": [],
+      "enrolled": true
     },
     {
       "subject": "ელექტრონული ბიზნესის სისტემები და მეწარმეობა",
@@ -354,7 +400,8 @@
       "end": "20:00",
       "id": "4-11-ICT19608G3-LP",
       "confirmed": true,
-      "sharedWith": []
+      "sharedWith": [],
+      "enrolled": true
     },
     {
       "subject": "საქმიანი კომუნიკაცია უცხოურ ენაზე (ინგლისური)",
@@ -383,7 +430,8 @@
         "8695",
         "8696",
         "8641"
-      ]
+      ],
+      "enrolled": false
     },
     {
       "subject": "მონაცემთა ინტელექტუალური ანალიზი",
@@ -407,7 +455,8 @@
       "end": "21:00",
       "id": "4-12-ICT32508G1-LB",
       "confirmed": true,
-      "sharedWith": []
+      "sharedWith": [],
+      "enrolled": true
     },
     {
       "subject": "საქმიანი კომუნიკაცია უცხოურ ენაზე (ინგლისური)",
@@ -436,7 +485,8 @@
         "8695",
         "8696",
         "8641"
-      ]
+      ],
+      "enrolled": false
     },
     {
       "subject": "მონაცემთა ინტელექტუალური ანალიზი",
@@ -460,7 +510,8 @@
       "end": "23:00",
       "id": "1-13-ICT32508G1-LB",
       "confirmed": true,
-      "sharedWith": []
+      "sharedWith": [],
+      "enrolled": true
     },
     {
       "subject": "პერსონალური მონაცემების დაცვის მეთოდები და საშუალებები",
@@ -484,7 +535,8 @@
       "end": "22:00",
       "id": "3-13-ICT21908G2-LP",
       "confirmed": true,
-      "sharedWith": []
+      "sharedWith": [],
+      "enrolled": true
     }
   ],
   "warnings": []

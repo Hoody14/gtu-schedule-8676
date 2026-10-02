@@ -509,6 +509,76 @@ def cross_check(
 
 
 # --------------------------------------------------------------------------
+# the student's own course list
+# --------------------------------------------------------------------------
+
+# The group tables carry everything the registrar files under a group code,
+# which is not always what the student actually attends. courses.json pins the
+# real enrolment down to (course code, lecturer) pairs. Classes outside it are
+# kept but set aside, so a late addition still shows up somewhere.
+
+COURSE_LIST_PATH = Path(__file__).with_name("courses.json")
+
+
+def surname(name: str) -> str:
+    return " ".join(name.split()).split(" ")[0].casefold() if name.strip() else ""
+
+
+def load_course_list(group: str, path: Path = COURSE_LIST_PATH) -> list[dict[str, str]] | None:
+    """The configured (code, lecturer) pairs, or None when there is no list."""
+    if not path.exists():
+        return None
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise ScrapeError(f"{path.name} is not valid JSON: {exc}") from exc
+
+    if data.get("group") and data["group"] != group:
+        return None
+    return [
+        {"code": course["code"].strip(), "lecturer": course.get("lecturer", "").strip()}
+        for course in data.get("courses", [])
+        if course.get("code")
+    ]
+
+
+def apply_course_list(
+    lessons: list[dict[str, Any]], courses: list[dict[str, str]] | None
+) -> list[str]:
+    """Flag each lesson as enrolled, and report courses that never turned up."""
+    if courses is None:
+        for lesson in lessons:
+            lesson["enrolled"] = True
+        return []
+
+    warnings: list[str] = []
+    matched: set[int] = set()
+
+    for lesson in lessons:
+        hit = None
+        for position, course in enumerate(courses):
+            if course["code"] != lesson["courseCode"]:
+                continue
+            # Lecturer spellings wobble between files ("ოთარ" / "ოთარი"), so
+            # fall back to the surname rather than rejecting a real match.
+            if course["lecturer"] and surname(course["lecturer"]) != surname(lesson["lecturer"]):
+                continue
+            hit = position
+            break
+
+        lesson["enrolled"] = hit is not None
+        if hit is not None:
+            matched.add(hit)
+
+    for position, course in enumerate(courses):
+        if position not in matched:
+            label = f"{course['code']} ({course['lecturer']})" if course["lecturer"] else course["code"]
+            warnings.append(f"{label} is on your course list but has no class this week")
+
+    return warnings
+
+
+# --------------------------------------------------------------------------
 # assembly
 # --------------------------------------------------------------------------
 
@@ -571,6 +641,7 @@ def build_payload(group: str, url: str | None, today: datetime) -> dict[str, Any
 
     warnings: list[str] = []
     failures: list[str] = []
+    courses = load_course_list(group)
 
     for entry in candidates:
         document = decode_html(fetch(entry["url"]))
@@ -593,6 +664,7 @@ def build_payload(group: str, url: str | None, today: datetime) -> dict[str, Any
             warnings.append(f"skipped a newer file - {failure}")
 
         confirmations = verify_against_lecturers(entry, group, lessons, warnings)
+        warnings.extend(apply_course_list(lessons, courses))
         break
     else:
         raise ScrapeError(
@@ -611,6 +683,12 @@ def build_payload(group: str, url: str | None, today: datetime) -> dict[str, Any
             "slotsFound": len(confirmations),
             "confirmed": sum(1 for lesson in lessons if lesson.get("confirmed")),
             "total": len(lessons),
+        },
+        "courseList": {
+            "configured": courses is not None,
+            "courses": courses or [],
+            "enrolled": sum(1 for lesson in lessons if lesson.get("enrolled")),
+            "extra": sum(1 for lesson in lessons if not lesson.get("enrolled")),
         },
         "days": DAYS,
         "slots": slots,
@@ -655,6 +733,18 @@ def main(argv: list[str] | None = None) -> int:
     print(
         f"verified : {check['confirmed']}/{check['total']} confirmed by {check['file'] or 'nothing'}"
     )
+    courses = payload["courseList"]
+    if courses["configured"]:
+        print(
+            f"enrolled : {courses['enrolled']} on your course list, "
+            f"{courses['extra']} set aside"
+        )
+        for lesson in payload["lessons"]:
+            if not lesson.get("enrolled"):
+                print(
+                    f"  aside  : {DAYS[lesson['day']]['en'][:3]} {lesson['start']} "
+                    f"{lesson['courseCode']} {lesson['lecturer']}"
+                )
     for warning in payload["warnings"]:
         print(f"warning  : {warning}")
     print(f"written  : {destination} ({'changed' if changed else 'no change'})")
@@ -666,6 +756,8 @@ def main(argv: list[str] | None = None) -> int:
             handle.write(f"source_file={payload['source']['fileName']}\n")
             handle.write(f"verified={check['confirmed']}/{check['total']}\n")
             handle.write(f"warnings={len(payload['warnings'])}\n")
+            handle.write(f"enrolled={courses['enrolled']}\n")
+            handle.write(f"set_aside={courses['extra']}\n")
 
     return 0
 

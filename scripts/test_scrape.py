@@ -255,6 +255,82 @@ class CrossCheckTest(unittest.TestCase):
         self.assertIsNone(scrape.teachers_key_for("something-else.html"))
 
 
+class CourseListTest(unittest.TestCase):
+    def lesson(self, code: str, lecturer: str) -> dict:
+        return {"courseCode": code, "lecturer": lecturer, "start": "18:00", "day": 0}
+
+    def test_without_a_list_everything_counts_as_enrolled(self):
+        lessons = [self.lesson("ICT1-P", "ირემაძე ია"), self.lesson("LEH9-LP", "სხვა ვინმე")]
+        warnings = scrape.apply_course_list(lessons, None)
+
+        self.assertEqual(warnings, [])
+        self.assertTrue(all(lesson["enrolled"] for lesson in lessons))
+
+    def test_sets_aside_a_course_the_student_does_not_take(self):
+        lessons = [self.lesson("ICT1-P", "ირემაძე ია"), self.lesson("LEH9-LP", "სიხარულიძე ნუგზარი")]
+        courses = [{"code": "ICT1-P", "lecturer": "ირემაძე ია"}]
+
+        scrape.apply_course_list(lessons, courses)
+
+        self.assertTrue(lessons[0]["enrolled"])
+        self.assertFalse(lessons[1]["enrolled"])
+
+    def test_same_code_under_a_different_lecturer_is_not_a_match(self):
+        lessons = [self.lesson("ICT19608G3-LP", "კაიშაური თინათინ")]
+        courses = [{"code": "ICT19608G3-LP", "lecturer": "ჯულაყიძე ლევან"}]
+
+        scrape.apply_course_list(lessons, courses)
+
+        self.assertFalse(lessons[0]["enrolled"])
+
+    def test_tolerates_a_wobbly_given_name(self):
+        """The two files spell the same lecturer "ოთარ" and "ოთარი"."""
+        lessons = [self.lesson("ICT32508G1-LB", "თავდიშვილი ოთარი")]
+        courses = [{"code": "ICT32508G1-LB", "lecturer": "თავდიშვილი ოთარ"}]
+
+        scrape.apply_course_list(lessons, courses)
+
+        self.assertTrue(lessons[0]["enrolled"])
+
+    def test_warns_about_a_course_with_no_class_this_week(self):
+        lessons = [self.lesson("ICT1-P", "ირემაძე ია")]
+        courses = [
+            {"code": "ICT1-P", "lecturer": "ირემაძე ია"},
+            {"code": "MAS2-LP", "lecturer": "კვარაცხელია ვახტანგ"},
+        ]
+
+        warnings = scrape.apply_course_list(lessons, courses)
+
+        self.assertEqual(len(warnings), 1)
+        self.assertIn("MAS2-LP", warnings[0])
+
+    def test_a_code_listed_twice_matches_both_lecturers(self):
+        lessons = [
+            self.lesson("ICT19608G3-LP", "ჯულაყიძე ლევან"),
+            self.lesson("ICT19608G3-LP", "კაიშაური თინათინ"),
+        ]
+        courses = [
+            {"code": "ICT19608G3-LP", "lecturer": "ჯულაყიძე ლევან"},
+            {"code": "ICT19608G3-LP", "lecturer": "კაიშაური თინათინ"},
+        ]
+
+        warnings = scrape.apply_course_list(lessons, courses)
+
+        self.assertTrue(all(lesson["enrolled"] for lesson in lessons))
+        self.assertEqual(warnings, [])
+
+    def test_the_shipped_course_list_loads(self):
+        courses = scrape.load_course_list("8676")
+
+        self.assertIsNotNone(courses)
+        assert courses is not None
+        self.assertEqual(len(courses), 8)
+        self.assertTrue(all(course["code"] and course["lecturer"] for course in courses))
+
+    def test_the_list_is_ignored_for_a_different_group(self):
+        self.assertIsNone(scrape.load_course_list("8594-1"))
+
+
 class HelperTest(unittest.TestCase):
     def test_academic_year_prefixes_roll_over_in_august(self) -> None:
         from datetime import datetime, timezone

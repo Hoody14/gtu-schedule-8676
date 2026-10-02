@@ -1,6 +1,7 @@
 import { AlertTriangle, ExternalLink } from 'lucide-react'
 import { AppHeader } from '@/components/AppHeader'
 import { ScheduleList } from '@/components/ScheduleList'
+import { SetAsideList } from '@/components/SetAsideList'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useLanguage } from '@/hooks/useLanguage'
@@ -9,7 +10,7 @@ import { useSchedule } from '@/hooks/useSchedule'
 import { useTheme } from '@/hooks/useTheme'
 import { formatDate, translate } from '@/lib/i18n'
 import { downloadIcs } from '@/lib/ics'
-import { sourceAgeDays } from '@/lib/schedule'
+import { enrolledLessons, setAsideLessons, sourceAgeDays } from '@/lib/schedule'
 
 export default function App() {
   const { schedule, status, error, reload } = useSchedule()
@@ -18,6 +19,8 @@ export default function App() {
   const now = useNow()
 
   const ageDays = schedule ? sourceAgeDays(schedule) : null
+  const visible = schedule ? enrolledLessons(schedule) : []
+  const setAside = schedule ? setAsideLessons(schedule) : []
 
   return (
     <div className="min-h-dvh bg-background">
@@ -61,18 +64,32 @@ export default function App() {
                 </div>
               )}
 
-              {schedule.lessons.length === 0 ? (
+              {visible.length === 0 ? (
                 <div className="rounded-lg border border-dashed p-12 text-center text-sm text-muted-foreground">
                   {translate('emptyWeek', language)}
                 </div>
               ) : (
-                <ScheduleList schedule={schedule} now={now} language={language} />
+                <ScheduleList
+                  schedule={schedule}
+                  lessons={visible}
+                  now={now}
+                  language={language}
+                />
               )}
+
+              <SetAsideList
+                lessons={setAside}
+                days={schedule.days}
+                group={schedule.group}
+                language={language}
+              />
 
               <footer className="mt-6 space-y-1.5 text-xs text-muted-foreground">
                 <p>
                   {schedule.crossCheck.confirmed}/{schedule.crossCheck.total}{' '}
                   {translate('verified', language)}
+                  {schedule.courseList.configured &&
+                    ` · ${translate('courseListNote', language, { count: schedule.courseList.enrolled })}`}
                 </p>
                 <p>
                   {translate('publishedOn', language)}:{' '}

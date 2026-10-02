@@ -1,0 +1,22 @@
+{
+  "_comment": [
+    "The courses this group is actually enrolled in, confirmed by the student.",
+    "The scraper shows a class in the main schedule only when its course code and",
+    "lecturer both appear here AND the lecturers' timetable lists the group for",
+    "that slot. Anything the university publishes for the group that is not on",
+    "this list is still scraped, but is set aside under 'not in your course list'",
+    "so a genuine late addition is visible rather than silently dropped.",
+    "Delete this file to show everything the university publishes."
+  ],
+  "group": "8676",
+  "courses": [
+    { "code": "ICT23808G2-P", "lecturer": "ირემაძე ია" },
+    { "code": "ICT32508G1-LB", "lecturer": "თავდიშვილი ოთარ" },
+    { "code": "MAS25008G1-LP", "lecturer": "კვარაცხელია ვახტანგ" },
+    { "code": "ICT18808G1-LP", "lecturer": "ახობაძე მერაბ" },
+    { "code": "ICT21908G2-LP", "lecturer": "მაისურაძე გიორგი" },
+    { "code": "ICT19608G3-LP", "lecturer": "ჯულაყიძე ლევან" },
+    { "code": "ICT19608G3-LP", "lecturer": "კაიშაური თინათინ" },
+    { "code": "ICT21908G2-LP", "lecturer": "შონია ოთარი" }
+  ]
+}

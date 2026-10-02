@@ -5,12 +5,13 @@ import { isHappeningNow, lessonsByDay, type Lesson, type Schedule, type TbilisiN
 
 interface ScheduleListProps {
   schedule: Schedule
+  lessons: Lesson[]
   now: TbilisiNow
   language: Language
 }
 
-export function ScheduleList({ schedule, now, language }: ScheduleListProps) {
-  const grouped = lessonsByDay(schedule)
+export function ScheduleList({ schedule, lessons: visible, now, language }: ScheduleListProps) {
+  const grouped = lessonsByDay(schedule, visible)
 
   return (
     <div className="divide-y divide-border rounded-lg border">

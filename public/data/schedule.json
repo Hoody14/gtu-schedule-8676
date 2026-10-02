@@ -3,17 +3,17 @@
   "program": "მაგისტრატურა - პროგრამა ინფორმატიკა",
   "university": "საქართველოს ტექნიკური უნივერსიტეტი",
   "universityEn": "Georgian Technical University",
-  "scrapedAt": "2026-10-02T10:03:06Z",
+  "scrapedAt": "2026-10-02T10:21:28Z",
   "source": {
-    "url": "http://leqtori.gtu.ge:9000/public/groups%202026_2027_I_2_.html",
-    "fileName": "groups 2026_2027_I_2_.html",
-    "lastModified": "2026-09-25T10:30:44.928Z",
-    "sizeBytes": 7347095,
-    "tableId": "table_2038_DETAILED",
-    "anchorUrl": "http://leqtori.gtu.ge:9000/public/groups%202026_2027_I_2_.html#table_2038_DETAILED",
+    "url": "http://leqtori.gtu.ge:9000/public/groups%202026_2027_I_3.html",
+    "fileName": "groups 2026_2027_I_3.html",
+    "lastModified": "2026-10-02T10:06:13.906Z",
+    "sizeBytes": 7575386,
+    "tableId": "table_2061_DETAILED",
+    "anchorUrl": "http://leqtori.gtu.ge:9000/public/groups%202026_2027_I_3.html#table_2061_DETAILED",
     "academicYear": "2026-2027",
     "semester": "I",
-    "week": 2
+    "week": 3
   },
   "days": [
     {
@@ -323,6 +323,28 @@
       "id": "4-11-ICT19608G3-LP"
     },
     {
+      "subject": "საქმიანი კომუნიკაცია უცხოურ ენაზე (ინგლისური)",
+      "courseCode": "LEH16312G3-LP",
+      "kind": "ლექცია",
+      "kindKey": "lecture",
+      "kindEn": "Lecture",
+      "lecturer": "სიხარულიძე ნუგზარი",
+      "lecturerLatin": "",
+      "room": "06-502ა",
+      "roomNote": "",
+      "raw": [
+        "საქმიანი კომუნიკაცია უცხოურ ენაზე (ინგლისური) (LEH16312G3-LP) ლექცია",
+        "სიხარულიძე ნუგზარი",
+        "06-502ა"
+      ],
+      "day": 0,
+      "slot": 12,
+      "span": 1,
+      "start": "20:00",
+      "end": "21:00",
+      "id": "0-12-LEH16312G3-LP"
+    },
+    {
       "subject": "მონაცემთა ინტელექტუალური ანალიზი",
       "courseCode": "ICT32508G1-LB",
       "kind": "ლექცია",
@@ -343,6 +365,28 @@
       "start": "20:00",
       "end": "21:00",
       "id": "4-12-ICT32508G1-LB"
+    },
+    {
+      "subject": "საქმიანი კომუნიკაცია უცხოურ ენაზე (ინგლისური)",
+      "courseCode": "LEH16312G3-LP",
+      "kind": "პრაქტიკული",
+      "kindKey": "practical",
+      "kindEn": "Practical",
+      "lecturer": "სიხარულიძე ნუგზარი",
+      "lecturerLatin": "",
+      "room": "06-502ა",
+      "roomNote": "",
+      "raw": [
+        "საქმიანი კომუნიკაცია უცხოურ ენაზე (ინგლისური) (LEH16312G3-LP) პრაქტიკული",
+        "სიხარულიძე ნუგზარი",
+        "06-502ა"
+      ],
+      "day": 0,
+      "slot": 13,
+      "span": 2,
+      "start": "21:00",
+      "end": "23:00",
+      "id": "0-13-LEH16312G3-LP"
     },
     {
       "subject": "მონაცემთა ინტელექტუალური ანალიზი",

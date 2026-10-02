@@ -111,7 +111,14 @@ def academic_year_prefixes(today: datetime) -> list[str]:
     return [f"groups {year}_{year + 1}" for year in (start, start - 1)] + ["groups "]
 
 
-def find_latest_source(today: datetime) -> dict[str, Any]:
+def find_source_candidates(today: datetime) -> list[dict[str, Any]]:
+    """Published timetable files, newest first.
+
+    Some weeks are published twice in different layouts (one table per group,
+    and one giant table listing every group as a row). Only the first layout
+    carries the per-group detail this script needs, so the caller walks the
+    list until a file it can actually read turns up.
+    """
     for prefix in academic_year_prefixes(today):
         candidates = [
             entry
@@ -119,9 +126,10 @@ def find_latest_source(today: datetime) -> dict[str, Any]:
             if entry["key"].lower().endswith(".html") and entry["size"] > 100_000
         ]
         if candidates:
-            newest = max(candidates, key=lambda entry: entry["lastModified"])
-            newest["url"] = BUCKET_URL + urllib.parse.quote(newest["key"])
-            return newest
+            candidates.sort(key=lambda entry: entry["lastModified"], reverse=True)
+            for entry in candidates:
+                entry["url"] = BUCKET_URL + urllib.parse.quote(entry["key"])
+            return candidates
     raise ScrapeError("no timetable HTML files found in the public bucket")
 
 
@@ -140,6 +148,8 @@ def find_group_entry(document: str, group: str) -> tuple[str, str]:
         r'<a href="#(table_\d+_DETAILED)">\s*' + re.escape(group) + r"\s*</a>", document
     )
     if not anchor:
+        if "table_LESS_DETAILED" in document or not re.search(r"table_\d+_DETAILED", document):
+            raise ScrapeError("this file uses the combined all-groups layout, not per-group tables")
         raise ScrapeError(
             f"group {group} is not listed in this timetable file - "
             "check the code, it must match the site exactly (e.g. '8676' or '8594-1')"
@@ -293,7 +303,8 @@ def parse_schedule_table(table_html: str) -> tuple[list[dict[str, Any]], list[di
     slots: list[dict[str, Any]] = []
     lessons: list[dict[str, Any]] = []
     warnings: list[str] = []
-    # Columns still covered by a rowspan from an earlier row.
+    # How many further rows each column stays covered by an earlier rowspan.
+    # Rows omit the cells they inherit, so columns must be skipped, not shifted.
     carried: dict[int, int] = {}
 
     for row in parser.rows:
@@ -320,10 +331,12 @@ def parse_schedule_table(table_html: str) -> tuple[list[dict[str, Any]], list[di
             }
         )
 
+        blocked = {column for column, rows in carried.items() if rows > 0}
+        spans_started_here: dict[int, int] = {}
+
         column = 0
         for _tag, text, rowspan in cells:
-            while carried.get(column, 0) > 0:
-                carried[column] -= 1
+            while column in blocked:
                 column += 1
             if column >= len(DAYS):
                 warnings.append(f"row '{label}' has more columns than days; extra cells ignored")
@@ -350,12 +363,11 @@ def parse_schedule_table(table_html: str) -> tuple[list[dict[str, Any]], list[di
                     )
 
             if rowspan > 1:
-                carried[column] = rowspan - 1
+                spans_started_here[column] = rowspan - 1
             column += 1
 
-        for key in list(carried):
-            if carried[key] <= 0:
-                del carried[key]
+        carried = {col: rows - 1 for col, rows in carried.items() if rows > 1}
+        carried.update(spans_started_here)
 
     return slots, lessons, warnings
 
@@ -383,22 +395,45 @@ def describe_source(entry: dict[str, Any], table_id: str) -> dict[str, Any]:
     }
 
 
+# How many of the newest files to try before giving up. Each one is several
+# megabytes, and in practice the group is found in the first or second.
+MAX_CANDIDATES = 4
+
+
 def build_payload(group: str, url: str | None, today: datetime) -> dict[str, Any]:
     if url:
         key = urllib.parse.unquote(url.rsplit("/", 1)[-1])
-        entry = {"key": key, "url": url, "lastModified": "", "size": 0}
+        candidates = [{"key": key, "url": url, "lastModified": "", "size": 0}]
     else:
-        entry = find_latest_source(today)
+        candidates = find_source_candidates(today)[:MAX_CANDIDATES]
 
-    document = decode_html(fetch(entry["url"]))
-    if not entry["size"]:
-        entry["size"] = len(document.encode("utf-8"))
+    warnings: list[str] = []
+    failures: list[str] = []
 
-    table_id, program = find_group_entry(document, group)
-    slots, lessons, warnings = parse_schedule_table(extract_table(document, table_id))
+    for entry in candidates:
+        document = decode_html(fetch(entry["url"]))
+        if not entry["size"]:
+            entry["size"] = len(document.encode("utf-8"))
 
-    if not slots:
-        raise ScrapeError(f"no time slots parsed for group {group}; the page layout may have changed")
+        try:
+            table_id, program = find_group_entry(document, group)
+        except ScrapeError as exc:
+            failures.append(f"{entry['key']}: {exc}")
+            continue
+
+        slots, lessons, parse_warnings = parse_schedule_table(extract_table(document, table_id))
+        if not slots:
+            failures.append(f"{entry['key']}: no time slots parsed")
+            continue
+
+        warnings.extend(parse_warnings)
+        for failure in failures:
+            warnings.append(f"skipped a newer file - {failure}")
+        break
+    else:
+        raise ScrapeError(
+            f"could not read a schedule for group {group}. Tried:\n  " + "\n  ".join(failures)
+        )
 
     return {
         "group": group,

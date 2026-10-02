@@ -25,3 +25,6 @@ dist-ssr
 
 # Screenshots the agent was given as task context
 assets/
+
+__pycache__/
+*.py[cod]

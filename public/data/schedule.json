@@ -1,0 +1,393 @@
+{
+  "group": "8676",
+  "program": "მაგისტრატურა - პროგრამა ინფორმატიკა",
+  "university": "საქართველოს ტექნიკური უნივერსიტეტი",
+  "universityEn": "Georgian Technical University",
+  "scrapedAt": "2026-10-02T10:03:06Z",
+  "source": {
+    "url": "http://leqtori.gtu.ge:9000/public/groups%202026_2027_I_2_.html",
+    "fileName": "groups 2026_2027_I_2_.html",
+    "lastModified": "2026-09-25T10:30:44.928Z",
+    "sizeBytes": 7347095,
+    "tableId": "table_2038_DETAILED",
+    "anchorUrl": "http://leqtori.gtu.ge:9000/public/groups%202026_2027_I_2_.html#table_2038_DETAILED",
+    "academicYear": "2026-2027",
+    "semester": "I",
+    "week": 2
+  },
+  "days": [
+    {
+      "index": 0,
+      "ka": "ორშაბათი",
+      "shortKa": "ორშ",
+      "en": "Monday",
+      "shortEn": "Mon"
+    },
+    {
+      "index": 1,
+      "ka": "სამშაბათი",
+      "shortKa": "სამშ",
+      "en": "Tuesday",
+      "shortEn": "Tue"
+    },
+    {
+      "index": 2,
+      "ka": "ოთხშაბათი",
+      "shortKa": "ოთხშ",
+      "en": "Wednesday",
+      "shortEn": "Wed"
+    },
+    {
+      "index": 3,
+      "ka": "ხუთშაბათი",
+      "shortKa": "ხუთშ",
+      "en": "Thursday",
+      "shortEn": "Thu"
+    },
+    {
+      "index": 4,
+      "ka": "პარასკევი",
+      "shortKa": "პარ",
+      "en": "Friday",
+      "shortEn": "Fri"
+    },
+    {
+      "index": 5,
+      "ka": "შაბათი",
+      "shortKa": "შაბ",
+      "en": "Saturday",
+      "shortEn": "Sat"
+    }
+  ],
+  "slots": [
+    {
+      "index": 1,
+      "label": "1-9:00",
+      "start": "09:00",
+      "end": "10:00"
+    },
+    {
+      "index": 2,
+      "label": "2-10:00",
+      "start": "10:00",
+      "end": "11:00"
+    },
+    {
+      "index": 3,
+      "label": "3-11:00",
+      "start": "11:00",
+      "end": "12:00"
+    },
+    {
+      "index": 4,
+      "label": "4-12:00",
+      "start": "12:00",
+      "end": "13:00"
+    },
+    {
+      "index": 5,
+      "label": "5-13:00",
+      "start": "13:00",
+      "end": "14:00"
+    },
+    {
+      "index": 6,
+      "label": "6-14:00",
+      "start": "14:00",
+      "end": "15:00"
+    },
+    {
+      "index": 7,
+      "label": "7-15:00",
+      "start": "15:00",
+      "end": "16:00"
+    },
+    {
+      "index": 8,
+      "label": "8-16:00",
+      "start": "16:00",
+      "end": "17:00"
+    },
+    {
+      "index": 9,
+      "label": "9-17:00",
+      "start": "17:00",
+      "end": "18:00"
+    },
+    {
+      "index": 10,
+      "label": "10-18:00",
+      "start": "18:00",
+      "end": "19:00"
+    },
+    {
+      "index": 11,
+      "label": "11-19:00",
+      "start": "19:00",
+      "end": "20:00"
+    },
+    {
+      "index": 12,
+      "label": "12-20:00",
+      "start": "20:00",
+      "end": "21:00"
+    },
+    {
+      "index": 13,
+      "label": "13-21:00",
+      "start": "21:00",
+      "end": "22:00"
+    },
+    {
+      "index": 14,
+      "label": "14-22:00",
+      "start": "22:00",
+      "end": "23:00"
+    }
+  ],
+  "lessons": [
+    {
+      "subject": "ელექტრონული ბიზნესის სისტემები და მეწარმეობა",
+      "courseCode": "ICT19608G3-LP",
+      "kind": "ლექცია",
+      "kindKey": "lecture",
+      "kindEn": "Lecture",
+      "lecturer": "კაიშაური თინათინ",
+      "lecturerLatin": "",
+      "room": "06-502ბ",
+      "roomNote": "პ",
+      "raw": [
+        "ელექტრონული ბიზნესის სისტემები და მეწარმეობა (ICT19608G3-LP) ლექცია",
+        "კაიშაური თინათინ",
+        "06-502ბ (პ)"
+      ],
+      "day": 5,
+      "slot": 8,
+      "span": 1,
+      "start": "16:00",
+      "end": "17:00",
+      "id": "5-8-ICT19608G3-LP"
+    },
+    {
+      "subject": "პერსონალური მონაცემების დაცვის მეთოდები და საშუალებები",
+      "courseCode": "ICT21908G2-LP",
+      "kind": "ლექცია",
+      "kindKey": "lecture",
+      "kindEn": "Lecture",
+      "lecturer": "შონია ოთარი",
+      "lecturerLatin": "",
+      "room": "06-410ბ",
+      "roomNote": "",
+      "raw": [
+        "პერსონალური მონაცემების დაცვის მეთოდები და საშუალებები (ICT21908G2-LP) ლექცია",
+        "შონია ოთარი",
+        "06-410ბ"
+      ],
+      "day": 5,
+      "slot": 9,
+      "span": 1,
+      "start": "17:00",
+      "end": "18:00",
+      "id": "5-9-ICT21908G2-LP"
+    },
+    {
+      "subject": "გამოყენებითი სტატისტიკა",
+      "courseCode": "MAS25008G1-LP",
+      "kind": "ლექცია",
+      "kindKey": "lecture",
+      "kindEn": "Lecture",
+      "lecturer": "კვარაცხელია ვახტანგ",
+      "lecturerLatin": "",
+      "room": "06-505ბ",
+      "roomNote": "პ",
+      "raw": [
+        "გამოყენებითი სტატისტიკა (MAS25008G1-LP) ლექცია",
+        "კვარაცხელია ვახტანგ",
+        "06-505ბ (პ)"
+      ],
+      "day": 2,
+      "slot": 10,
+      "span": 1,
+      "start": "18:00",
+      "end": "19:00",
+      "id": "2-10-MAS25008G1-LP"
+    },
+    {
+      "subject": "სისტემური ანალიზი და სინერგეტიკა",
+      "courseCode": "ICT18808G1-LP",
+      "kind": "ლექცია",
+      "kindKey": "lecture",
+      "kindEn": "Lecture",
+      "lecturer": "ახობაძე მერაბ",
+      "lecturerLatin": "",
+      "room": "08-301ბ",
+      "roomNote": "",
+      "raw": [
+        "სისტემური ანალიზი და სინერგეტიკა (ICT18808G1-LP) ლექცია",
+        "ახობაძე მერაბ",
+        "08-301ბ"
+      ],
+      "day": 3,
+      "slot": 10,
+      "span": 1,
+      "start": "18:00",
+      "end": "19:00",
+      "id": "3-10-ICT18808G1-LP"
+    },
+    {
+      "subject": "გამოყენებითი სტატისტიკა",
+      "courseCode": "MAS25008G1-LP",
+      "kind": "პრაქტიკული",
+      "kindKey": "practical",
+      "kindEn": "Practical",
+      "lecturer": "კვარაცხელია ვახტანგ",
+      "lecturerLatin": "",
+      "room": "06-410ბ",
+      "roomNote": "",
+      "raw": [
+        "გამოყენებითი სტატისტიკა (MAS25008G1-LP) პრაქტიკული",
+        "კვარაცხელია ვახტანგ",
+        "06-410ბ"
+      ],
+      "day": 4,
+      "slot": 10,
+      "span": 1,
+      "start": "18:00",
+      "end": "19:00",
+      "id": "4-10-MAS25008G1-LP"
+    },
+    {
+      "subject": "კომპიუტერული დიზაინის გრაფიკული ტექნოლოგიები",
+      "courseCode": "ICT23808G2-P",
+      "kind": "პრაქტიკული",
+      "kindKey": "practical",
+      "kindEn": "Practical",
+      "lecturer": "ირემაძე ია",
+      "lecturerLatin": "",
+      "room": "09-204",
+      "roomNote": "",
+      "raw": [
+        "კომპიუტერული დიზაინის გრაფიკული ტექნოლოგიები (ICT23808G2-P) პრაქტიკული",
+        "ირემაძე ია",
+        "09-204"
+      ],
+      "day": 1,
+      "slot": 11,
+      "span": 2,
+      "start": "19:00",
+      "end": "21:00",
+      "id": "1-11-ICT23808G2-P"
+    },
+    {
+      "subject": "სისტემური ანალიზი და სინერგეტიკა",
+      "courseCode": "ICT18808G1-LP",
+      "kind": "პრაქტიკული",
+      "kindKey": "practical",
+      "kindEn": "Practical",
+      "lecturer": "ახობაძე მერაბ",
+      "lecturerLatin": "",
+      "room": "08-301ბ",
+      "roomNote": "",
+      "raw": [
+        "სისტემური ანალიზი და სინერგეტიკა (ICT18808G1-LP) პრაქტიკული",
+        "ახობაძე მერაბ",
+        "08-301ბ"
+      ],
+      "day": 3,
+      "slot": 11,
+      "span": 1,
+      "start": "19:00",
+      "end": "20:00",
+      "id": "3-11-ICT18808G1-LP"
+    },
+    {
+      "subject": "ელექტრონული ბიზნესის სისტემები და მეწარმეობა",
+      "courseCode": "ICT19608G3-LP",
+      "kind": "პრაქტიკული",
+      "kindKey": "practical",
+      "kindEn": "Practical",
+      "lecturer": "ჯულაყიძე ლევან",
+      "lecturerLatin": "Julakidze Levan",
+      "room": "09-210",
+      "roomNote": "",
+      "raw": [
+        "ელექტრონული ბიზნესის სისტემები და მეწარმეობა (ICT19608G3-LP) პრაქტიკული",
+        "ჯულაყიძე ლევან Julakidze Levan",
+        "09-210"
+      ],
+      "day": 4,
+      "slot": 11,
+      "span": 1,
+      "start": "19:00",
+      "end": "20:00",
+      "id": "4-11-ICT19608G3-LP"
+    },
+    {
+      "subject": "მონაცემთა ინტელექტუალური ანალიზი",
+      "courseCode": "ICT32508G1-LB",
+      "kind": "ლექცია",
+      "kindKey": "lecture",
+      "kindEn": "Lecture",
+      "lecturer": "თავდიშვილი ოთარ",
+      "lecturerLatin": "Tavdishvili Otar",
+      "room": "06-308ბ",
+      "roomNote": "",
+      "raw": [
+        "მონაცემთა ინტელექტუალური ანალიზი (ICT32508G1-LB) ლექცია",
+        "თავდიშვილი ოთარ Tavdishvili Otar",
+        "06-308ბ"
+      ],
+      "day": 4,
+      "slot": 12,
+      "span": 1,
+      "start": "20:00",
+      "end": "21:00",
+      "id": "4-12-ICT32508G1-LB"
+    },
+    {
+      "subject": "მონაცემთა ინტელექტუალური ანალიზი",
+      "courseCode": "ICT32508G1-LB",
+      "kind": "პრაქტიკული",
+      "kindKey": "practical",
+      "kindEn": "Practical",
+      "lecturer": "თავდიშვილი ოთარ",
+      "lecturerLatin": "Tavdishvili Otar",
+      "room": "09-206",
+      "roomNote": "",
+      "raw": [
+        "მონაცემთა ინტელექტუალური ანალიზი (ICT32508G1-LB) პრაქტიკული",
+        "თავდიშვილი ოთარ Tavdishvili Otar",
+        "09-206"
+      ],
+      "day": 1,
+      "slot": 13,
+      "span": 2,
+      "start": "21:00",
+      "end": "23:00",
+      "id": "1-13-ICT32508G1-LB"
+    },
+    {
+      "subject": "პერსონალური მონაცემების დაცვის მეთოდები და საშუალებები",
+      "courseCode": "ICT21908G2-LP",
+      "kind": "პრაქტიკული",
+      "kindKey": "practical",
+      "kindEn": "Practical",
+      "lecturer": "მაისურაძე გიორგი",
+      "lecturerLatin": "",
+      "room": "09-208",
+      "roomNote": "",
+      "raw": [
+        "პერსონალური მონაცემების დაცვის მეთოდები და საშუალებები (ICT21908G2-LP) პრაქტიკული",
+        "მაისურაძე გიორგი",
+        "09-208"
+      ],
+      "day": 3,
+      "slot": 13,
+      "span": 1,
+      "start": "21:00",
+      "end": "22:00",
+      "id": "3-13-ICT21908G2-LP"
+    }
+  ],
+  "warnings": []
+}

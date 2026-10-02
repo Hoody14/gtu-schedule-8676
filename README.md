@@ -178,6 +178,18 @@ committed or sent anywhere except `api.github.com`. Without a token the site
 still works; the toast just links you to the workflow's **Run workflow** button
 on GitHub instead.
 
+### Seeing a new version
+
+Each build writes its own id into `dist/build.json` and bakes the same id into
+the bundle. On load, and again whenever you press refresh, the page compares
+the two and reloads itself once if the deployed id is newer.
+
+That check exists because refreshing the data is not the same as refreshing
+the app. GitHub Pages serves `index.html` with `max-age=600`, and a tab left
+open never revalidates it at all, so without the check an old bundle can keep
+rendering a layout that no longer exists even though the JSON underneath it is
+current.
+
 ## Data format
 
 `public/data/schedule.json` is the single source of truth for the UI:

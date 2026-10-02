@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { Schedule } from '@/lib/schedule'
+import { reloadIfStale } from '@/lib/version'
 
 type Status = 'loading' | 'ready' | 'error'
 
@@ -44,12 +45,18 @@ export function useSchedule(): UseScheduleResult {
       setStatus('error')
       setError(cause instanceof Error ? cause.message : String(cause))
     })
+    void reloadIfStale()
     return () => {
       cancelled = true
     }
   }, [load])
 
-  const reload = useCallback(async () => load(true), [load])
+  const reload = useCallback(async () => {
+    // A new deployment changes the code as well as the data, so check for one
+    // before bothering to diff the JSON.
+    if (await reloadIfStale()) return { changed: true }
+    return load(true)
+  }, [load])
 
   return { schedule, status, error, reload }
 }

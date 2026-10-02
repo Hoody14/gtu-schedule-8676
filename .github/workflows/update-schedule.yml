@@ -1,0 +1,85 @@
+name: Update schedule and deploy
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    # The university republishes the timetable once a week, usually around
+    # Thursday/Friday. Checking every six hours picks it up the same day.
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+# Never let a manual refresh race a scheduled one.
+concurrency:
+  group: schedule-deploy
+  cancel-in-progress: false
+
+jobs:
+  update-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Scrape the timetable
+        id: scrape
+        run: python3 scripts/scrape.py
+        env:
+          GTU_GROUP: ${{ vars.GTU_GROUP || '8676' }}
+
+      - name: Commit the new schedule
+        if: steps.scrape.outputs.changed == 'true'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/data/schedule.json
+          git commit -m "Update schedule from ${{ steps.scrape.outputs.source_file }}"
+          git pull --rebase --autostash origin "${{ github.ref_name }}"
+          git push origin HEAD:"${{ github.ref_name }}"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build the site
+        run: npm run build
+        env:
+          VITE_GITHUB_REPO: ${{ github.repository }}
+          VITE_GITHUB_REF: ${{ github.ref_name }}
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - id: deploy
+        uses: actions/deploy-pages@v4
+
+      - name: Summary
+        run: |
+          {
+            echo "### GTU schedule"
+            echo ""
+            echo "- Source file: \`${{ steps.scrape.outputs.source_file }}\`"
+            echo "- Lessons parsed: ${{ steps.scrape.outputs.lessons }}"
+            echo "- Data changed: ${{ steps.scrape.outputs.changed }}"
+            echo "- Site: ${{ steps.deploy.outputs.page_url }}"
+          } >> "$GITHUB_STEP_SUMMARY"

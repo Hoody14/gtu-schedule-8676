@@ -38,9 +38,7 @@ export function SettingsDialog({
   const [token, setToken] = useState(settings.token)
 
   const url = workflowUrl({ ...settings, repo })
-  const tokenUrl = repo
-    ? `https://github.com/settings/personal-access-tokens/new?name=GTU%20schedule%20refresh`
-    : 'https://github.com/settings/personal-access-tokens/new'
+  const tokenUrl = 'https://github.com/settings/personal-access-tokens/new'
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

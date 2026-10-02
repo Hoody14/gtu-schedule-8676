@@ -19,6 +19,7 @@ interface RefreshControlProps {
 }
 
 const stageLabels: Record<string, Record<Language, string>> = {
+  reloading: { ka: 'ახლდება…', en: 'Reloading…' },
   dispatching: { ka: 'ეშვება…', en: 'Starting…' },
   queued: { ka: 'რიგშია…', en: 'Queued…' },
   running: { ka: 'იკითხება…', en: 'Scraping…' },
@@ -34,7 +35,7 @@ export function RefreshControl({ language, onReload }: RefreshControlProps) {
 
   const handleClick = useCallback(async () => {
     const dispatchable = canDispatch(settings)
-    setStage(dispatchable ? 'dispatching' : 'running')
+    setStage(dispatchable ? 'dispatching' : 'reloading')
 
     try {
       if (dispatchable) {

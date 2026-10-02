@@ -296,12 +296,17 @@ def parse_cell(lines: list[str]) -> dict[str, Any]:
     return lesson
 
 
-def parse_schedule_table(table_html: str) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[str]]:
+def parse_grid(table_html: str) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[str]]:
+    """Walk a timetable table and yield every non-empty cell with its position.
+
+    Group tables and lecturer tables share this layout, so both are read here
+    and the cell contents are interpreted by the caller.
+    """
     parser = TableParser()
     parser.feed(table_html)
 
     slots: list[dict[str, Any]] = []
-    lessons: list[dict[str, Any]] = []
+    cells_out: list[dict[str, Any]] = []
     warnings: list[str] = []
     # How many further rows each column stays covered by an earlier rowspan.
     # Rows omit the cells they inherit, so columns must be skipped, not shifted.
@@ -344,23 +349,17 @@ def parse_schedule_table(table_html: str) -> tuple[list[dict[str, Any]], list[di
 
             lines = clean_lines(text)
             if lines and lines[0] not in EMPTY_CELL_VALUES:
-                lesson = parse_cell(lines)
-                lesson.update(
+                cells_out.append(
                     {
                         "day": column,
                         "slot": slot_index,
                         "span": rowspan,
                         "start": start,
                         "end": shift_time(start, rowspan),
+                        "label": label,
+                        "lines": lines,
                     }
                 )
-                lesson["id"] = f"{column}-{slot_index}-{lesson['courseCode'] or 'x'}"
-                lessons.append(lesson)
-                if len(lines) > 3:
-                    warnings.append(
-                        f"cell at {DAYS[column]['en']} {label} has {len(lines)} lines; "
-                        "extra lines kept only in 'raw'"
-                    )
 
             if rowspan > 1:
                 spans_started_here[column] = rowspan - 1
@@ -369,7 +368,144 @@ def parse_schedule_table(table_html: str) -> tuple[list[dict[str, Any]], list[di
         carried = {col: rows - 1 for col, rows in carried.items() if rows > 1}
         carried.update(spans_started_here)
 
+    return slots, cells_out, warnings
+
+
+def parse_schedule_table(table_html: str) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[str]]:
+    """Read one group's table into lessons."""
+    slots, cells, warnings = parse_grid(table_html)
+    lessons: list[dict[str, Any]] = []
+
+    for cell in cells:
+        lesson = parse_cell(cell["lines"])
+        lesson.update(
+            {
+                "day": cell["day"],
+                "slot": cell["slot"],
+                "span": cell["span"],
+                "start": cell["start"],
+                "end": cell["end"],
+            }
+        )
+        lesson["id"] = f"{cell['day']}-{cell['slot']}-{lesson['courseCode'] or 'x'}"
+        lessons.append(lesson)
+
+        if len(cell["lines"]) > 3:
+            warnings.append(
+                f"cell at {DAYS[cell['day']]['en']} {cell['label']} has {len(cell['lines'])} lines; "
+                "extra lines kept only in 'raw'"
+            )
+
     return slots, lessons, warnings
+
+
+# --------------------------------------------------------------------------
+# cross-check against the lecturers' timetables
+# --------------------------------------------------------------------------
+
+# Alongside every "groups ...html" file the university publishes a
+# "teachers ...html" twin. There, each lecturer has a table whose cells list
+# the attending group codes. Reading our group out of those tables gives a
+# second, independent view of the same timetable, which is what catches a
+# misread column or a class that only one of the two files knows about.
+
+TEACHER_TABLE = re.compile(r'<table id="(table_\d+)"[^>]*>', re.I)
+TEACHER_NAME = re.compile(r'<th colspan="6">(.*?)</th>', re.S)
+GROUP_TOKEN = re.compile(r"[0-9]{3,6}(?:-[0-9]+)?")
+
+
+def teachers_key_for(group_key: str) -> str | None:
+    if not group_key.lower().startswith("groups "):
+        return None
+    return "teachers " + group_key[len("groups "):]
+
+
+def parse_group_list(line: str) -> list[str]:
+    return [token for token in (part.strip() for part in line.split(",")) if GROUP_TOKEN.fullmatch(token)]
+
+
+def extract_group_from_teachers(document: str, group: str) -> list[dict[str, Any]]:
+    """Every slot in the lecturers' file that names this group."""
+    found: list[dict[str, Any]] = []
+    needle = re.compile(r"(?<![\w-])" + re.escape(group) + r"(?![\w-])")
+
+    for match in TEACHER_TABLE.finditer(document):
+        end = document.find("</table>", match.end())
+        if end == -1:
+            continue
+        table_html = document[match.start() : end + len("</table>")]
+        if not needle.search(table_html):
+            continue
+
+        name_match = TEACHER_NAME.search(table_html)
+        lecturer = re.sub(r"\s+", " ", name_match.group(1)).strip() if name_match else ""
+
+        _slots, cells, _warnings = parse_grid(table_html)
+        for cell in cells:
+            lines = cell["lines"]
+            groups = parse_group_list(lines[0]) if lines else []
+            if group not in groups:
+                continue
+
+            # Lecturer cells read: group codes, then "subject (CODE) kind", then room.
+            subject = SUBJECT_LINE.match(lines[1]) if len(lines) > 1 else None
+            found.append(
+                {
+                    "day": cell["day"],
+                    "slot": cell["slot"],
+                    "span": cell["span"],
+                    "start": cell["start"],
+                    "end": cell["end"],
+                    "courseCode": subject.group("code").strip() if subject else "",
+                    "subject": subject.group("subject").strip() if subject else "",
+                    "kind": subject.group("kind").strip() if subject else "",
+                    "groups": groups,
+                    "lecturer": split_lecturer(lecturer)[0],
+                    "room": lines[2] if len(lines) > 2 else "",
+                }
+            )
+
+    return found
+
+
+def cross_check(
+    lessons: list[dict[str, Any]], confirmations: list[dict[str, Any]], group: str
+) -> list[str]:
+    """Annotate lessons with the lecturers' view and report any disagreement."""
+    warnings: list[str] = []
+    index: dict[tuple[int, int], list[dict[str, Any]]] = {}
+    for entry in confirmations:
+        index.setdefault((entry["day"], entry["slot"]), []).append(entry)
+
+    for lesson in lessons:
+        candidates = index.get((lesson["day"], lesson["slot"]), [])
+        match = next(
+            (entry for entry in candidates if entry["courseCode"] == lesson["courseCode"]),
+            None,
+        )
+
+        lesson["confirmed"] = match is not None
+        lesson["sharedWith"] = (
+            [code for code in match["groups"] if code != group] if match else []
+        )
+
+        if match is None:
+            warnings.append(
+                f"{DAYS[lesson['day']]['en']} {lesson['start']} {lesson['courseCode']}: "
+                f"the lecturers' timetable does not list group {group} for this slot"
+            )
+
+    seen = {(lesson["day"], lesson["slot"], lesson["courseCode"]) for lesson in lessons}
+    for entry in confirmations:
+        key = (entry["day"], entry["slot"], entry["courseCode"])
+        if key not in seen:
+            warnings.append(
+                f"{DAYS[entry['day']]['en']} {entry['start']} {entry['courseCode']} "
+                f"({entry['lecturer']}): listed for group {group} in the lecturers' "
+                "timetable but missing from the group's own table"
+            )
+
+    return warnings
 
 
 # --------------------------------------------------------------------------
@@ -398,6 +534,32 @@ def describe_source(entry: dict[str, Any], table_id: str) -> dict[str, Any]:
 # How many of the newest files to try before giving up. Each one is several
 # megabytes, and in practice the group is found in the first or second.
 MAX_CANDIDATES = 4
+
+
+def verify_against_lecturers(
+    entry: dict[str, Any], group: str, lessons: list[dict[str, Any]], warnings: list[str]
+) -> list[dict[str, Any]]:
+    """Confirm each lesson against the lecturers' twin of this file."""
+    teachers_key = teachers_key_for(entry["key"])
+    if not teachers_key:
+        for lesson in lessons:
+            lesson["confirmed"] = None
+            lesson["sharedWith"] = []
+        return []
+
+    url = BUCKET_URL + urllib.parse.quote(teachers_key)
+    try:
+        document = decode_html(fetch(url))
+    except ScrapeError as exc:
+        warnings.append(f"could not cross-check against {teachers_key}: {exc}")
+        for lesson in lessons:
+            lesson["confirmed"] = None
+            lesson["sharedWith"] = []
+        return []
+
+    confirmations = extract_group_from_teachers(document, group)
+    warnings.extend(cross_check(lessons, confirmations, group))
+    return confirmations
 
 
 def build_payload(group: str, url: str | None, today: datetime) -> dict[str, Any]:
@@ -429,6 +591,8 @@ def build_payload(group: str, url: str | None, today: datetime) -> dict[str, Any
         warnings.extend(parse_warnings)
         for failure in failures:
             warnings.append(f"skipped a newer file - {failure}")
+
+        confirmations = verify_against_lecturers(entry, group, lessons, warnings)
         break
     else:
         raise ScrapeError(
@@ -442,6 +606,12 @@ def build_payload(group: str, url: str | None, today: datetime) -> dict[str, Any
         "universityEn": "Georgian Technical University",
         "scrapedAt": today.strftime("%Y-%m-%dT%H:%M:%SZ"),
         "source": describe_source(entry, table_id),
+        "crossCheck": {
+            "file": teachers_key_for(entry["key"]) or "",
+            "slotsFound": len(confirmations),
+            "confirmed": sum(1 for lesson in lessons if lesson.get("confirmed")),
+            "total": len(lessons),
+        },
         "days": DAYS,
         "slots": slots,
         "lessons": lessons,
@@ -481,6 +651,10 @@ def main(argv: list[str] | None = None) -> int:
     print(f"group    : {payload['group']} - {payload['program']}")
     print(f"table    : {payload['source']['tableId']}")
     print(f"lessons  : {len(payload['lessons'])} across {len(payload['slots'])} slots")
+    check = payload["crossCheck"]
+    print(
+        f"verified : {check['confirmed']}/{check['total']} confirmed by {check['file'] or 'nothing'}"
+    )
     for warning in payload["warnings"]:
         print(f"warning  : {warning}")
     print(f"written  : {destination} ({'changed' if changed else 'no change'})")
@@ -490,6 +664,8 @@ def main(argv: list[str] | None = None) -> int:
             handle.write(f"changed={'true' if changed else 'false'}\n")
             handle.write(f"lessons={len(payload['lessons'])}\n")
             handle.write(f"source_file={payload['source']['fileName']}\n")
+            handle.write(f"verified={check['confirmed']}/{check['total']}\n")
+            handle.write(f"warnings={len(payload['warnings'])}\n")
 
     return 0
 

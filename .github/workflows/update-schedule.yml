@@ -83,6 +83,8 @@ jobs:
             echo ""
             echo "- Source file: \`${{ steps.scrape.outputs.source_file }}\`"
             echo "- Lessons parsed: ${{ steps.scrape.outputs.lessons }}"
+            echo "- Confirmed by the lecturers' timetable: ${{ steps.scrape.outputs.verified }}"
+            echo "- Warnings: ${{ steps.scrape.outputs.warnings }}"
             echo "- Data changed: ${{ steps.scrape.outputs.changed }}"
             echo "- Site: ${{ steps.deploy.outputs.page_url }}"
           } >> "$GITHUB_STEP_SUMMARY"

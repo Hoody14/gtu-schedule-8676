@@ -160,6 +160,101 @@ class FindGroupTest(unittest.TestCase):
             scrape.find_group_entry(html, "8676")
 
 
+def teacher_document(rows: str, name: str = "სიხარულიძე ნუგზარი", table_id: str = "table_1067") -> str:
+    return f"""
+    <table id="{table_id}" border="1">
+      <thead>
+        <tr><td rowspan="2"></td><th colspan="6">{name}</th></tr>
+        <tr><th class="xAxis">ორშ./Mon.</th><th class="xAxis">სამშ./Tues.</th>
+        <th class="xAxis">ოთხშ./Wed.</th><th class="xAxis">ხუთშ./Thurs.</th>
+        <th class="xAxis">პარ./Fri.</th><th class="xAxis">შაბ./Sat.</th></tr>
+      </thead>
+      <tbody>{rows}</tbody>
+    </table>
+    """
+
+
+class CrossCheckTest(unittest.TestCase):
+    """The lecturers' file lists attending groups, so it can confirm each lesson."""
+
+    MONDAY_LECTURE = (
+        "8684, 8695, 8696, 8676, 8641<br>"
+        "საქმიანი კომუნიკაცია უცხოურ ენაზე (ინგლისური) (LEH16312G3-LP) ლექცია<br>06-502ა<br>"
+    )
+
+    def test_finds_the_group_in_a_lecturer_table(self) -> None:
+        html = teacher_document(row("12-20:00", lesson_cell(self.MONDAY_LECTURE), *([EMPTY] * 5)))
+        found = scrape.extract_group_from_teachers(html, "8676")
+        self.assertEqual(len(found), 1)
+        self.assertEqual(found[0]["day"], 0)
+        self.assertEqual(found[0]["start"], "20:00")
+        self.assertEqual(found[0]["courseCode"], "LEH16312G3-LP")
+        self.assertEqual(found[0]["lecturer"], "სიხარულიძე ნუგზარი")
+        self.assertEqual(found[0]["room"], "06-502ა")
+        self.assertIn("8684", found[0]["groups"])
+
+    def test_ignores_slots_belonging_to_other_groups(self) -> None:
+        html = teacher_document(
+            row(
+                "11-19:00",
+                lesson_cell("8651, 8686, 8671<br>რაღაც (LEH16312G3-LP) ლექცია<br>06-503ა<br>"),
+                *([EMPTY] * 5),
+            )
+        )
+        self.assertEqual(scrape.extract_group_from_teachers(html, "8676"), [])
+
+    def test_does_not_match_a_group_code_that_is_only_a_substring(self) -> None:
+        html = teacher_document(
+            row("11-19:00", lesson_cell("86761, 18676<br>რაღაც (X-LP) ლექცია<br>1<br>"), *([EMPTY] * 5))
+        )
+        self.assertEqual(scrape.extract_group_from_teachers(html, "8676"), [])
+
+    def test_confirms_matching_lessons_and_records_the_other_groups(self) -> None:
+        lessons = [{"day": 0, "slot": 12, "start": "20:00", "courseCode": "LEH16312G3-LP"}]
+        confirmations = [
+            {
+                "day": 0,
+                "slot": 12,
+                "start": "20:00",
+                "courseCode": "LEH16312G3-LP",
+                "groups": ["8684", "8676", "8641"],
+                "lecturer": "სიხარულიძე ნუგზარი",
+            }
+        ]
+        warnings = scrape.cross_check(lessons, confirmations, "8676")
+        self.assertEqual(warnings, [])
+        self.assertTrue(lessons[0]["confirmed"])
+        self.assertEqual(lessons[0]["sharedWith"], ["8684", "8641"])
+
+    def test_warns_when_a_lesson_is_not_backed_by_a_lecturer_table(self) -> None:
+        lessons = [{"day": 0, "slot": 12, "start": "20:00", "courseCode": "LEH16312G3-LP"}]
+        warnings = scrape.cross_check(lessons, [], "8676")
+        self.assertFalse(lessons[0]["confirmed"])
+        self.assertEqual(len(warnings), 1)
+        self.assertIn("does not list group 8676", warnings[0])
+
+    def test_warns_when_the_lecturers_file_knows_a_class_the_group_table_omits(self) -> None:
+        confirmations = [
+            {
+                "day": 3,
+                "slot": 9,
+                "start": "17:00",
+                "courseCode": "ICT1-LP",
+                "groups": ["8676"],
+                "lecturer": "ვიღაც ვინმე",
+            }
+        ]
+        warnings = scrape.cross_check([], confirmations, "8676")
+        self.assertEqual(len(warnings), 1)
+        self.assertIn("missing from the group's own table", warnings[0])
+
+    def test_derives_the_lecturers_file_name_from_the_groups_file(self) -> None:
+        self.assertEqual(
+            scrape.teachers_key_for("groups 2026_2027_I_3.html"), "teachers 2026_2027_I_3.html"
+        )
+        self.assertIsNone(scrape.teachers_key_for("something-else.html"))
+
+
 class HelperTest(unittest.TestCase):
     def test_academic_year_prefixes_roll_over_in_august(self) -> None:
         from datetime import datetime, timezone

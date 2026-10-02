@@ -3,7 +3,7 @@
   "program": "მაგისტრატურა - პროგრამა ინფორმატიკა",
   "university": "საქართველოს ტექნიკური უნივერსიტეტი",
   "universityEn": "Georgian Technical University",
-  "scrapedAt": "2026-10-02T10:21:28Z",
+  "scrapedAt": "2026-10-02T11:39:18Z",
   "source": {
     "url": "http://leqtori.gtu.ge:9000/public/groups%202026_2027_I_3.html",
     "fileName": "groups 2026_2027_I_3.html",
@@ -14,6 +14,12 @@
     "academicYear": "2026-2027",
     "semester": "I",
     "week": 3
+  },
+  "crossCheck": {
+    "file": "teachers 2026_2027_I_3.html",
+    "slotsFound": 13,
+    "confirmed": 13,
+    "total": 13
   },
   "days": [
     {
@@ -166,7 +172,13 @@
       "span": 1,
       "start": "16:00",
       "end": "17:00",
-      "id": "5-8-ICT19608G3-LP"
+      "id": "5-8-ICT19608G3-LP",
+      "confirmed": true,
+      "sharedWith": [
+        "8694",
+        "8696",
+        "8641"
+      ]
     },
     {
       "subject": "პერსონალური მონაცემების დაცვის მეთოდები და საშუალებები",
@@ -188,7 +200,11 @@
       "span": 1,
       "start": "17:00",
       "end": "18:00",
-      "id": "5-9-ICT21908G2-LP"
+      "id": "5-9-ICT21908G2-LP",
+      "confirmed": true,
+      "sharedWith": [
+        "8641"
+      ]
     },
     {
       "subject": "გამოყენებითი სტატისტიკა",
@@ -210,7 +226,13 @@
       "span": 1,
       "start": "18:00",
       "end": "19:00",
-      "id": "2-10-MAS25008G1-LP"
+      "id": "2-10-MAS25008G1-LP",
+      "confirmed": true,
+      "sharedWith": [
+        "8694",
+        "8696",
+        "8641"
+      ]
     },
     {
       "subject": "სისტემური ანალიზი და სინერგეტიკა",
@@ -232,7 +254,11 @@
       "span": 1,
       "start": "18:00",
       "end": "19:00",
-      "id": "3-10-ICT18808G1-LP"
+      "id": "3-10-ICT18808G1-LP",
+      "confirmed": true,
+      "sharedWith": [
+        "8696"
+      ]
     },
     {
       "subject": "გამოყენებითი სტატისტიკა",
@@ -254,7 +280,9 @@
       "span": 1,
       "start": "18:00",
       "end": "19:00",
-      "id": "4-10-MAS25008G1-LP"
+      "id": "4-10-MAS25008G1-LP",
+      "confirmed": true,
+      "sharedWith": []
     },
     {
       "subject": "კომპიუტერული დიზაინის გრაფიკული ტექნოლოგიები",
@@ -276,7 +304,9 @@
       "span": 2,
       "start": "19:00",
       "end": "21:00",
-      "id": "1-11-ICT23808G2-P"
+      "id": "1-11-ICT23808G2-P",
+      "confirmed": true,
+      "sharedWith": []
     },
     {
       "subject": "სისტემური ანალიზი და სინერგეტიკა",
@@ -298,7 +328,9 @@
       "span": 1,
       "start": "19:00",
       "end": "20:00",
-      "id": "3-11-ICT18808G1-LP"
+      "id": "3-11-ICT18808G1-LP",
+      "confirmed": true,
+      "sharedWith": []
     },
     {
       "subject": "ელექტრონული ბიზნესის სისტემები და მეწარმეობა",
@@ -320,7 +352,9 @@
       "span": 1,
       "start": "19:00",
       "end": "20:00",
-      "id": "4-11-ICT19608G3-LP"
+      "id": "4-11-ICT19608G3-LP",
+      "confirmed": true,
+      "sharedWith": []
     },
     {
       "subject": "საქმიანი კომუნიკაცია უცხოურ ენაზე (ინგლისური)",
@@ -342,7 +376,14 @@
       "span": 1,
       "start": "20:00",
       "end": "21:00",
-      "id": "0-12-LEH16312G3-LP"
+      "id": "0-12-LEH16312G3-LP",
+      "confirmed": true,
+      "sharedWith": [
+        "8684",
+        "8695",
+        "8696",
+        "8641"
+      ]
     },
     {
       "subject": "მონაცემთა ინტელექტუალური ანალიზი",
@@ -364,7 +405,9 @@
       "span": 1,
       "start": "20:00",
       "end": "21:00",
-      "id": "4-12-ICT32508G1-LB"
+      "id": "4-12-ICT32508G1-LB",
+      "confirmed": true,
+      "sharedWith": []
     },
     {
       "subject": "საქმიანი კომუნიკაცია უცხოურ ენაზე (ინგლისური)",
@@ -386,7 +429,14 @@
       "span": 2,
       "start": "21:00",
       "end": "23:00",
-      "id": "0-13-LEH16312G3-LP"
+      "id": "0-13-LEH16312G3-LP",
+      "confirmed": true,
+      "sharedWith": [
+        "8684",
+        "8695",
+        "8696",
+        "8641"
+      ]
     },
     {
       "subject": "მონაცემთა ინტელექტუალური ანალიზი",
@@ -408,7 +458,9 @@
       "span": 2,
       "start": "21:00",
       "end": "23:00",
-      "id": "1-13-ICT32508G1-LB"
+      "id": "1-13-ICT32508G1-LB",
+      "confirmed": true,
+      "sharedWith": []
     },
     {
       "subject": "პერსონალური მონაცემების დაცვის მეთოდები და საშუალებები",
@@ -430,7 +482,9 @@
       "span": 1,
       "start": "21:00",
       "end": "22:00",
-      "id": "3-13-ICT21908G2-LP"
+      "id": "3-13-ICT21908G2-LP",
+      "confirmed": true,
+      "sharedWith": []
     }
   ],
   "warnings": []

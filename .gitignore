@@ -28,7 +28,3 @@ assets/
 
 __pycache__/
 *.py[cod]
-
-# Downloadable archive, regenerate with:
-#   git archive --format=zip --prefix=gtu-schedule-8676/ -o gtu-schedule-8676.zip HEAD
-gtu-schedule-8676.zip

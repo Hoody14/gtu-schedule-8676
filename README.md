@@ -58,6 +58,13 @@ python3 scripts/scrape.py --out /tmp/schedule.json
 Other scripts: `npm run build` (type-check and bundle into `dist/`),
 `npm run preview`, `npm run lint`.
 
+The parser has its own tests, which run against synthetic HTML so they work
+offline and keep passing when a new week is published:
+
+```bash
+python3 scripts/test_scrape.py
+```
+
 ## Publishing to GitHub Pages
 
 1. Push this repository to GitHub.

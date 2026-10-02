@@ -35,6 +35,9 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Test the parser
+        run: python3 scripts/test_scrape.py
+
       - name: Scrape the timetable
         id: scrape
         run: python3 scripts/scrape.py

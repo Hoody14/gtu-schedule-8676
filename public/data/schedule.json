@@ -3,20 +3,20 @@
   "program": "მაგისტრატურა - პროგრამა ინფორმატიკა",
   "university": "საქართველოს ტექნიკური უნივერსიტეტი",
   "universityEn": "Georgian Technical University",
-  "scrapedAt": "2026-10-10T16:31:23Z",
+  "scrapedAt": "2026-10-16T15:42:55Z",
   "source": {
-    "url": "http://leqtori.gtu.ge:9000/public/groups%202026_2027_I_4_.html",
-    "fileName": "groups 2026_2027_I_4_.html",
-    "lastModified": "2026-10-10T15:30:31.138Z",
-    "sizeBytes": 7666756,
-    "tableId": "table_2074_DETAILED",
-    "anchorUrl": "http://leqtori.gtu.ge:9000/public/groups%202026_2027_I_4_.html#table_2074_DETAILED",
+    "url": "http://leqtori.gtu.ge:9000/public/groups%202026_2027_I_5.html",
+    "fileName": "groups 2026_2027_I_5.html",
+    "lastModified": "2026-10-16T10:57:07.542Z",
+    "sizeBytes": 7622411,
+    "tableId": "table_2070_DETAILED",
+    "anchorUrl": "http://leqtori.gtu.ge:9000/public/groups%202026_2027_I_5.html#table_2070_DETAILED",
     "academicYear": "2026-2027",
     "semester": "I",
-    "week": 4
+    "week": 5
   },
   "crossCheck": {
-    "file": "teachers 2026_2027_I_4_.html",
+    "file": "teachers 2026_2027_I_5.html",
     "slotsFound": 13,
     "confirmed": 13,
     "total": 13
@@ -191,6 +191,56 @@
     }
   ],
   "lessons": [
+    {
+      "subject": "საქმიანი კომუნიკაცია უცხოურ ენაზე (ინგლისური)",
+      "courseCode": "LEH16312G3-LP",
+      "kind": "ლექცია",
+      "kindKey": "lecture",
+      "kindEn": "Lecture",
+      "lecturer": "ფიფია ნანა",
+      "lecturerLatin": "",
+      "room": "06-507ბ",
+      "roomNote": "პ",
+      "raw": [
+        "საქმიანი კომუნიკაცია უცხოურ ენაზე (ინგლისური) (LEH16312G3-LP) ლექცია",
+        "ფიფია ნანა",
+        "06-507ბ (პ)"
+      ],
+      "day": 5,
+      "slot": 5,
+      "span": 1,
+      "start": "13:00",
+      "end": "14:00",
+      "id": "5-5-LEH16312G3-LP",
+      "confirmed": true,
+      "sharedWith": [],
+      "enrolled": false
+    },
+    {
+      "subject": "საქმიანი კომუნიკაცია უცხოურ ენაზე (ინგლისური)",
+      "courseCode": "LEH16312G3-LP",
+      "kind": "პრაქტიკული",
+      "kindKey": "practical",
+      "kindEn": "Practical",
+      "lecturer": "ფიფია ნანა",
+      "lecturerLatin": "",
+      "room": "06-414ბ",
+      "roomNote": "",
+      "raw": [
+        "საქმიანი კომუნიკაცია უცხოურ ენაზე (ინგლისური) (LEH16312G3-LP) პრაქტიკული",
+        "ფიფია ნანა",
+        "06-414ბ"
+      ],
+      "day": 5,
+      "slot": 6,
+      "span": 2,
+      "start": "14:00",
+      "end": "16:00",
+      "id": "5-6-LEH16312G3-LP",
+      "confirmed": true,
+      "sharedWith": [],
+      "enrolled": false
+    },
     {
       "subject": "ელექტრონული ბიზნესის სისტემები და მეწარმეობა",
       "courseCode": "ICT19608G3-LP",
@@ -404,36 +454,6 @@
       "enrolled": true
     },
     {
-      "subject": "საქმიანი კომუნიკაცია უცხოურ ენაზე (ინგლისური)",
-      "courseCode": "LEH16312G3-LP",
-      "kind": "ლექცია",
-      "kindKey": "lecture",
-      "kindEn": "Lecture",
-      "lecturer": "სიხარულიძე ნუგზარი",
-      "lecturerLatin": "",
-      "room": "06-502ა",
-      "roomNote": "",
-      "raw": [
-        "საქმიანი კომუნიკაცია უცხოურ ენაზე (ინგლისური) (LEH16312G3-LP) ლექცია",
-        "სიხარულიძე ნუგზარი",
-        "06-502ა"
-      ],
-      "day": 0,
-      "slot": 12,
-      "span": 1,
-      "start": "20:00",
-      "end": "21:00",
-      "id": "0-12-LEH16312G3-LP",
-      "confirmed": true,
-      "sharedWith": [
-        "8684",
-        "8695",
-        "8696",
-        "8641"
-      ],
-      "enrolled": false
-    },
-    {
       "subject": "მონაცემთა ინტელექტუალური ანალიზი",
       "courseCode": "ICT32508G1-LB",
       "kind": "ლექცია",
@@ -457,36 +477,6 @@
       "confirmed": true,
       "sharedWith": [],
       "enrolled": true
-    },
-    {
-      "subject": "საქმიანი კომუნიკაცია უცხოურ ენაზე (ინგლისური)",
-      "courseCode": "LEH16312G3-LP",
-      "kind": "პრაქტიკული",
-      "kindKey": "practical",
-      "kindEn": "Practical",
-      "lecturer": "სიხარულიძე ნუგზარი",
-      "lecturerLatin": "",
-      "room": "06-502ა",
-      "roomNote": "",
-      "raw": [
-        "საქმიანი კომუნიკაცია უცხოურ ენაზე (ინგლისური) (LEH16312G3-LP) პრაქტიკული",
-        "სიხარულიძე ნუგზარი",
-        "06-502ა"
-      ],
-      "day": 0,
-      "slot": 13,
-      "span": 2,
-      "start": "21:00",
-      "end": "23:00",
-      "id": "0-13-LEH16312G3-LP",
-      "confirmed": true,
-      "sharedWith": [
-        "8684",
-        "8695",
-        "8696",
-        "8641"
-      ],
-      "enrolled": false
     },
     {
       "subject": "მონაცემთა ინტელექტუალური ანალიზი",

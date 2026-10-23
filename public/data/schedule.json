@@ -3,20 +3,20 @@
   "program": "მაგისტრატურა - პროგრამა ინფორმატიკა",
   "university": "საქართველოს ტექნიკური უნივერსიტეტი",
   "universityEn": "Georgian Technical University",
-  "scrapedAt": "2026-10-16T15:42:55Z",
+  "scrapedAt": "2026-10-23T10:39:24Z",
   "source": {
-    "url": "http://leqtori.gtu.ge:9000/public/groups%202026_2027_I_5.html",
-    "fileName": "groups 2026_2027_I_5.html",
-    "lastModified": "2026-10-16T10:57:07.542Z",
-    "sizeBytes": 7622411,
-    "tableId": "table_2070_DETAILED",
-    "anchorUrl": "http://leqtori.gtu.ge:9000/public/groups%202026_2027_I_5.html#table_2070_DETAILED",
+    "url": "http://leqtori.gtu.ge:9000/public/groups%202026_2027_I_6.html",
+    "fileName": "groups 2026_2027_I_6.html",
+    "lastModified": "2026-10-23T05:34:00.669Z",
+    "sizeBytes": 7593555,
+    "tableId": "table_2065_DETAILED",
+    "anchorUrl": "http://leqtori.gtu.ge:9000/public/groups%202026_2027_I_6.html#table_2065_DETAILED",
     "academicYear": "2026-2027",
     "semester": "I",
-    "week": 5
+    "week": 6
   },
   "crossCheck": {
-    "file": "teachers 2026_2027_I_5.html",
+    "file": "teachers 2026_2027_I_6.html",
     "slotsFound": 13,
     "confirmed": 13,
     "total": 13

@@ -3,7 +3,7 @@
   "program": "მაგისტრატურა - პროგრამა ინფორმატიკა",
   "university": "საქართველოს ტექნიკური უნივერსიტეტი",
   "universityEn": "Georgian Technical University",
-  "scrapedAt": "2026-10-29T22:09:42Z",
+  "scrapedAt": "2026-11-06T13:23:24Z",
   "source": {
     "url": "http://leqtori.gtu.ge:9000/public/groups%202026_2027_I_7.html",
     "fileName": "groups 2026_2027_I_7.html",
@@ -529,5 +529,7 @@
       "enrolled": true
     }
   ],
-  "warnings": []
+  "warnings": [
+    "skipped a newer file - groups 2026_2027_I_9_11.html: group 8676 is not listed in this timetable file - check the code, it must match the site exactly (e.g. '8676' or '8594-1')"
+  ]
 }

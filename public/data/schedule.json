@@ -3,20 +3,20 @@
   "program": "მაგისტრატურა - პროგრამა ინფორმატიკა",
   "university": "საქართველოს ტექნიკური უნივერსიტეტი",
   "universityEn": "Georgian Technical University",
-  "scrapedAt": "2026-11-06T13:23:24Z",
+  "scrapedAt": "2026-11-12T14:10:21Z",
   "source": {
-    "url": "http://leqtori.gtu.ge:9000/public/groups%202026_2027_I_7.html",
-    "fileName": "groups 2026_2027_I_7.html",
-    "lastModified": "2026-10-29T19:08:17.263Z",
-    "sizeBytes": 7596130,
+    "url": "http://leqtori.gtu.ge:9000/public/groups%202026_2027_I_8.html",
+    "fileName": "groups 2026_2027_I_8.html",
+    "lastModified": "2026-11-12T09:42:57.084Z",
+    "sizeBytes": 7651248,
     "tableId": "table_2063_DETAILED",
-    "anchorUrl": "http://leqtori.gtu.ge:9000/public/groups%202026_2027_I_7.html#table_2063_DETAILED",
+    "anchorUrl": "http://leqtori.gtu.ge:9000/public/groups%202026_2027_I_8.html#table_2063_DETAILED",
     "academicYear": "2026-2027",
     "semester": "I",
-    "week": 7
+    "week": 8
   },
   "crossCheck": {
-    "file": "teachers 2026_2027_I_7.html",
+    "file": "teachers 2026_2027_I_8.html",
     "slotsFound": 13,
     "confirmed": 13,
     "total": 13
@@ -529,7 +529,5 @@
       "enrolled": true
     }
   ],
-  "warnings": [
-    "skipped a newer file - groups 2026_2027_I_9_11.html: group 8676 is not listed in this timetable file - check the code, it must match the site exactly (e.g. '8676' or '8594-1')"
-  ]
+  "warnings": []
 }
